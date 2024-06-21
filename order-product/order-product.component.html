@@ -1,0 +1,158 @@
+<div class="order-container">
+  <form (submit)="onSubmit()" [formGroup]="orderForm">
+    <div class="header">
+      <label class="user-name">User Name: ParkExcel</label>
+      <button type="button" class="logout-btn" (click)="logout()">
+        Logout
+      </button>
+    </div>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" formControlName="name" />
+      <div
+        class="error"
+        *ngIf="
+          orderForm.get('name')?.invalid &&
+          (orderForm.get('name')?.dirty || orderForm.get('name')?.touched)
+        "
+      >
+        <div *ngIf="orderForm.get('name')?.errors?.['required']">
+          Name is required.
+        </div>
+        <div *ngIf="orderForm.get('name')?.errors?.['minlength']">
+          Name must be at least 5 characters long.
+        </div>
+        <div *ngIf="orderForm.get('name')?.errors?.['maxlength']">
+          Name cannot be more than 40 characters long.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <input type="date" id="date" formControlName="date" />
+      <div
+        class="error"
+        *ngIf="
+          orderForm.get('date')?.invalid &&
+          (orderForm.get('date')?.dirty || orderForm.get('date')?.touched)
+        "
+      >
+        <div *ngIf="orderForm.get('date')?.errors?.['required']">
+          Date is required.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="mobile">Mobile:</label>
+      <input id="mobile" formControlName="mobile" />
+      <div
+        class="error"
+        *ngIf="
+          orderForm.get('mobile')?.invalid &&
+          (orderForm.get('mobile')?.dirty || orderForm.get('mobile')?.touched)
+        "
+      >
+        <div *ngIf="orderForm.get('mobile')?.errors?.['required']">
+          Mobile is required.
+        </div>
+        <div *ngIf="orderForm.get('mobile')?.errors?.['pattern']">
+          Invalid mobile number.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email Id:</label>
+      <input id="email" formControlName="email" type="email" />
+      <div
+        class="error"
+        *ngIf="
+          orderForm.get('email')?.invalid &&
+          (orderForm.get('email')?.dirty || orderForm.get('email')?.touched)
+        "
+      >
+        <div *ngIf="orderForm.get('email')?.errors?.['required']">
+          Email is required.
+        </div>
+        <div *ngIf="orderForm.get('email')?.errors?.['email']">
+          Invalid email format.
+        </div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Id</th>
+          <th>Code</th>
+          <th>Rate</th>
+          <th>Quantity</th>
+          <th>Value</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let product of productFormArray.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <td>{{ i + 1 }}</td>
+          <td>
+            <input
+              type="text"
+              formControlName="id"
+              (blur)="onProductIdChange(i)"
+            />
+          </td>
+          <td>
+            <input type="text" formControlName="code" [disabled]="true" />
+          </td>
+          <td>
+            <input type="text" formControlName="rate" [disabled]="true" />
+          </td>
+          <td>
+            <input
+              type="number"
+              formControlName="quantity"
+              (input)="calculateProductValue(i)"
+            />
+          </td>
+          <td>
+            <input type="text" formControlName="value" [disabled]="true" />
+          </td>
+          <td>
+            <button type="button" class="delete-btn" (click)="removeProduct(i)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" class="add-btn" (click)="addProduct()">Add</button>
+    <div class="form-group">
+      <label>Total Quantity:</label>
+      <input [value]="totalQuantity" disabled />
+    </div>
+    <div class="form-group">
+      <label>Total Value:</label>
+      <input [value]="totalValue" disabled />
+    </div>
+    <div class="form-group">
+      <label for="discount">Discount:</label>
+      <input
+        id="discount"
+        formControlName="discount"
+        (input)="calculateTotals()"
+      />
+    </div>
+    <div class="form-group">
+      <label>Invoice Amount:</label>
+      <input [value]="invoiceAmount" disabled />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="submit-btn">Submit</button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
